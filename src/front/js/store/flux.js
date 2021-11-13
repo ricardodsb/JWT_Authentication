@@ -1,6 +1,7 @@
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
+			token: null,
 			message: null,
 			demo: [
 				{
@@ -21,9 +22,53 @@ const getState = ({ getStore, getActions, setStore }) => {
 				getActions().changeColor(0, "green");
 			},
 
+			syncTokenFromSessionStore: () => {
+				const token = sessionStorage.getItem("token");
+				if (token && token != "" && token != undefined) setStore({ token: token });
+			},
+
+			logout: () => {
+				sessionStorage.removeItem("token");
+				setStore({ token: null });
+			},
+
+			login: async (email, password) => {
+				const inside = {
+					method: "POST",
+					headers: {
+						"Content-type": "application/json"
+					},
+					body: JSON.stringify({
+						email: email,
+						password: password
+					})
+				};
+
+				try {
+					const resp = await fetch("https://3001-rose-moose-sftxs5vd.ws-eu18.gitpod.io/token", inside);
+					if (resp.status !== 200) {
+						alert("ERROR");
+						return false;
+					}
+					const data = await resp.json();
+					sessionStorage.setItem("token", data.access_token);
+					setStore({ token: data.access_token });
+					console.log("This came from the backend", data);
+					return true;
+				} catch (error) {
+					console.error("ERROR");
+				}
+			},
+
 			getMessage: () => {
+				const store = getStore();
+				const opts = {
+					headers: {
+						Authorization: "Bearer " + store.token
+					}
+				};
 				// fetching data from the backend
-				fetch(process.env.BACKEND_URL + "/api/hello")
+				fetch("https://3001-rose-moose-sftxs5vd.ws-eu18.gitpod.io/api/hello", opts)
 					.then(resp => resp.json())
 					.then(data => setStore({ message: data.message }))
 					.catch(error => console.log("Error loading message from backend", error));

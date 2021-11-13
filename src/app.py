@@ -17,6 +17,8 @@ static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
+app.config["JWT_SECRET_KEY"] = "kgslfd76wdjh"  # Change this!
+jwt = JWTManager(app)
 # database condiguration
 db_url = os.getenv("DATABASE_URL")
 if db_url is not None:
@@ -37,9 +39,6 @@ setup_admin(app)
 # Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
 
-
-app.config["JWT_SECRET_KEY"] = "kgslfd76wdjh"  # Change this!
-jwt = JWTManager(app)
 
 
 # Handle/serialize errors like a JSON object
@@ -65,7 +64,7 @@ def serve_any_other_file(path):
 
 
 @app.route("/token", methods=["POST"])
-def new_token():
+def create_token():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
     if email != "test" or password != "test":
@@ -73,6 +72,17 @@ def new_token():
 
     access_token = create_access_token(identity=email)
     return jsonify(access_token=access_token)
+
+@app.route("/hello", methods=["GET"])
+@jwt_required()
+def get_private():
+
+    email = get_jwt_identity()
+    dictionary = {
+        "message": "Welcome " +email
+    }
+    return jsonify(dictionary)
+
 
 # this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':

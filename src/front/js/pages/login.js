@@ -1,5 +1,6 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
+import { useHistory } from "react-router";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.scss";
 
@@ -7,37 +8,42 @@ export const Login = () => {
 	const { store, actions } = useContext(Context);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const token = sessionStorage.getItem("token");
+	const history = useHistory();
+
+	useEffect(
+		() => {
+			if (store.token && store.token != "" && store.token != undefined) actions.getMessage();
+		},
+		[store.token]
+	);
+
+	console.log("This is your token", store.token);
 	const handleClick = () => {
-		const inside = {
-			method: "POST",
-			headers: {
-				"Content-type": "application/json"
-			},
-			body: JSON.stringify({
-				email: email,
-				password: password
-			})
-		};
-		fetch("https://3001-coral-fly-mjo05ig0.ws-eu18.gitpod.io/token", inside)
-			.then(resp => {
-				if (resp.status === 200) return resp.json();
-				else alert("ERROR");
-			})
-			.then(data => {});
+		actions.login(email, password);
 	};
 
+	if (store.token && store.token != "" && store.token != undefined) history.push("/login");
 	return (
-		<div className="text-center mt-5">
+		<div className="text-center mt-3">
 			<h1>Login</h1>
-			<div>
-				<input type="text" placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
-				<input
-					type="password"
-					placeholder="password"
-					value={password}
-					onChange={e => setPassword(e.target.value)}
-				/>
-				<button onClick={handleClick}>Login</button>
+
+			<div className="text-center mt-5">
+				{store.token && store.token != "" && store.token != undefined ? (
+					"You are logged in  " + store.token
+				) : (
+					<div>
+						<input type="text" placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
+						<input
+							type="password"
+							placeholder="password"
+							value={password}
+							onChange={e => setPassword(e.target.value)}
+						/>
+						<button onClick={handleClick}>Login</button>
+					</div>
+				)}
+				<div className="alert alert-info">{store.message}</div>
 			</div>
 		</div>
 	);
