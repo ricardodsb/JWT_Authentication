@@ -73,13 +73,13 @@ def create_token():
     access_token = create_access_token(identity=email)
     return jsonify(access_token=access_token)
 
-@app.route("/hello", methods=["GET"])
+@app.route("/private", methods=["GET"])
 @jwt_required()
 def get_private():
 
     email = get_jwt_identity()
     dictionary = {
-        "message": "Welcome " +email
+        "message": email +  " You are logged in with your new token... CHECK YOUR CONSOLE AND YOUR NETWORK :)"
     }
     return jsonify(dictionary)
 

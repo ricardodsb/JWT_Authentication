@@ -45,7 +45,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				};
 
 				try {
-					const resp = await fetch("https://3001-rose-moose-sftxs5vd.ws-eu18.gitpod.io/token", inside);
+					const resp = await fetch("https://3001-coffee-vicuna-28si5ary.ws-eu18.gitpod.io/token", inside);
 					if (resp.status !== 200) {
 						alert("ERROR");
 						return false;
@@ -68,7 +68,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					}
 				};
 				// fetching data from the backend
-				fetch("https://3001-rose-moose-sftxs5vd.ws-eu18.gitpod.io/api/hello", opts)
+				fetch("https://3001-coffee-vicuna-28si5ary.ws-eu18.gitpod.io/private", opts)
 					.then(resp => resp.json())
 					.then(data => setStore({ message: data.message }))
 					.catch(error => console.log("Error loading message from backend", error));
