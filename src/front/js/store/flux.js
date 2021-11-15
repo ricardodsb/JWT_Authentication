@@ -14,7 +14,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 					background: "white",
 					initial: "white"
 				}
-			]
+			],
+			positions: []
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -45,7 +46,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				};
 
 				try {
-					const resp = await fetch("https://3001-coffee-vicuna-28si5ary.ws-eu18.gitpod.io/token", inside);
+					const resp = await fetch(
+						"https://3001-apricot-silverfish-d51v6dda.ws-eu18.gitpod.io/token",
+						inside
+					); //#YOU SHOULD UPDATE THE URL
 					if (resp.status !== 200) {
 						alert("ERROR");
 						return false;
@@ -59,7 +63,24 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.error("ERROR");
 				}
 			},
-
+			createUser: data => {
+				const response = fetch("https://3001-apricot-silverfish-d51v6dda.ws-eu18.gitpod.io/api/user", {
+					//#YOU SHOULD UPDATE THE URL
+					method: "POST",
+					mode: "cors",
+					headers: {
+						"Content-Type": "application/json"
+					},
+					body: JSON.stringify(data)
+				}).then(resp => resp.json());
+				return response;
+			},
+			getPositions: () => {
+				fetch("https://3001-apricot-silverfish-d51v6dda.ws-eu18.gitpod.io/api/positions") //#YOU SHOULD UPDATE THE URL
+					.then(resp => resp.json())
+					.then(data => setStore({ positions: data }))
+					.catch(error => console.log("Error loading positions from backend", error));
+			},
 			getMessage: () => {
 				const store = getStore();
 				const opts = {
@@ -67,8 +88,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 						Authorization: "Bearer " + store.token
 					}
 				};
+
 				// fetching data from the backend
-				fetch("https://3001-coffee-vicuna-28si5ary.ws-eu18.gitpod.io/private", opts)
+				fetch("https://3001-apricot-silverfish-d51v6dda.ws-eu18.gitpod.io/private", opts) //#YOU SHOULD UPDATE THE URL
 					.then(resp => resp.json())
 					.then(data => setStore({ message: data.message }))
 					.catch(error => console.log("Error loading message from backend", error));
