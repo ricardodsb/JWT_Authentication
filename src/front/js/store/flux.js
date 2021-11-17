@@ -46,11 +46,8 @@ const getState = ({ getStore, getActions, setStore }) => {
 				};
 
 				try {
-					const resp = await fetch(
-						"https://3001-apricot-silverfish-d51v6dda.ws-eu18.gitpod.io/token",
-						inside
-					); //#YOU SHOULD UPDATE THE URL
-					if (resp.status !== 200) {
+					const resp = await fetch("https://3001-pink-raven-0i5g685h.ws-eu18.gitpod.io/token", inside); //#YOU SHOULD UPDATE THE URL
+					if (resp.status == 401) {
 						alert("ERROR");
 						return false;
 					}
@@ -64,7 +61,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}
 			},
 			createUser: data => {
-				const response = fetch("https://3001-apricot-silverfish-d51v6dda.ws-eu18.gitpod.io/api/user", {
+				const response = fetch("https://3001-pink-raven-0i5g685h.ws-eu18.gitpod.io/api/user", {
 					//#YOU SHOULD UPDATE THE URL
 					method: "POST",
 					mode: "cors",
@@ -76,7 +73,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				return response;
 			},
 			getPositions: () => {
-				fetch("https://3001-apricot-silverfish-d51v6dda.ws-eu18.gitpod.io/api/positions") //#YOU SHOULD UPDATE THE URL
+				fetch("https://3001-pink-raven-0i5g685h.ws-eu18.gitpod.io/api/positions") //#YOU SHOULD UPDATE THE URL
 					.then(resp => resp.json())
 					.then(data => setStore({ positions: data }))
 					.catch(error => console.log("Error loading positions from backend", error));
@@ -90,7 +87,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 				};
 
 				// fetching data from the backend
-				fetch("https://3001-apricot-silverfish-d51v6dda.ws-eu18.gitpod.io/private", opts) //#YOU SHOULD UPDATE THE URL
+				fetch("https://3001-pink-raven-0i5g685h.ws-eu18.gitpod.io/private", opts) //#YOU SHOULD UPDATE THE URL
 					.then(resp => resp.json())
 					.then(data => setStore({ message: data.message }))
 					.catch(error => console.log("Error loading message from backend", error));

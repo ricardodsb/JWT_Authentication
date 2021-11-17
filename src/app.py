@@ -67,7 +67,7 @@ def serve_any_other_file(path):
 def create_token():
     email = request.json.get("email", None)
     password = request.json.get("password", None)
-    if email != "test" or password != "test":
+    if email == " " or password == " ":
         return jsonify({"msg": "Bad username or password"}), 401
 
     access_token = create_access_token(identity=email)
